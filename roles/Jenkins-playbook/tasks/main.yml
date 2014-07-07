@@ -1,0 +1,30 @@
+---
+- name: Installing wget
+  yum: name=wget state=present
+
+- name: Add the Jenkins repository to the yum repos
+  command: wget http://pkg.jenkins-ci.org/redhat/jenkins.repo -O /etc/yum.repos.d/jenkins.repo
+
+#- name: Add the Jenkins repository to the yum repos
+#  get_url: url=http://pkg.jenkins-ci.org/redhat/jenkins.repo dest=/etc/yum.repos.d/jenkins.repo
+
+- name: Importing Jenkins-ci.org.key
+  rpm_key: state=present key=http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+
+- name: Installing Jenkins
+  yum: name=jenkins 
+
+- name: Install Java 1.7 and some basic dependencies
+  yum: name={{item}}
+  with_items:
+    - mc
+    - java-1.7.0-openjdk
+    - screen
+
+- name: Ensure Jenkins is running automatically at boot time
+  action: command /sbin/chkconfig jenkins on
+  notify: 
+    - restart Jenkins
+
+- name: Ensure Jenkins is started
+  service: name=jenkins state=started
