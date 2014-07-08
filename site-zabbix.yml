@@ -1,0 +1,8 @@
+---
+#test
+
+- hosts: jenkins
+  user: root
+
+  roles:
+  - Jenkins-playbook
