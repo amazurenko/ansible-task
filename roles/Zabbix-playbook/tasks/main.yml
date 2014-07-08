@@ -1,0 +1,10 @@
+---
+- name: Installing  zabbix-server-mysql, zabbix-webmysql, mysql-server and other some services 
+  yum: name={{item}}
+  with_items:
+    - zabbix-server-mysql
+    - zabbix-web-mysql
+    - mysql-server
+    - screen
+    - mc
+

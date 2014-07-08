@@ -11,7 +11,6 @@
 ## Ex 1: Ungrouped hosts, specify before any group headers.
 
 ##jenkins.srv
-zabbix.srv
 
 
 ## Ex 2: A collection of hosts belonging to the 'webservers' group
@@ -30,6 +29,10 @@ zabbix.srv
 ## Ex 3: A collection of database servers in the 'dbservers' group
 [jenkins]
 jenkins.srv
+
+[zabbix]
+zabbix.srv
+
 
 #[dbservers]
 

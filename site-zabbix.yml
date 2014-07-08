@@ -1,8 +1,8 @@
 ---
 #test
 
-- hosts: jenkins
+- hosts: zabbix 
   user: root
 
   roles:
-  - Jenkins-playbook
+  - Zabbix-playbook

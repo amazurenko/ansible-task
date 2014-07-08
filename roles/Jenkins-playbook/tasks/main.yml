@@ -14,17 +14,29 @@
 - name: Installing Jenkins
   yum: name=jenkins 
 
-- name: Install Java 1.7 and some basic dependencies
+- name: Install Java 1.7, zabbix-agent and some basic services
   yum: name={{item}}
   with_items:
     - mc
     - java-1.7.0-openjdk
     - screen
+    - httpd
+    - zabbix-agent
 
 - name: Ensure Jenkins is running automatically at boot time
   action: command /sbin/chkconfig jenkins on
   notify: 
     - restart Jenkins
+
+- name: Ensure Apache is running automatically at boot time
+  action: command /sbin/chkconfig httpd on
+  notify:
+    - restart Apache
+
+- name: Ensure Zabbix-agent is running automatically at boot time
+  action: command /sbin/chkconfig zabbix-agent on
+  notify:
+    - restart Zabbix-agent
 
 - name: Ensure Jenkins is started
   service: name=jenkins state=started
