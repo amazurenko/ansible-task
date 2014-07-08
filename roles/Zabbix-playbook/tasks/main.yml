@@ -1,6 +1,6 @@
 ---
 - name: Installing  zabbix-server-mysql, zabbix-webmysql, mysql-server and other some services 
-  yum: name={{item}}
+  yum: name={{item}} state=present
   with_items:
     - zabbix-server-mysql
     - zabbix-web-mysql
@@ -8,3 +8,32 @@
     - screen
     - mc
 
+- name: Installing  MySQL-python
+  yum: name=MySQL-python state=present
+
+- name: Ensure mysql-server is running automatically at boot time
+  action: command /sbin/chkconfig mysqld on
+  notify:
+    - restart Mysql-server
+
+- name:  Creating a new Zabbix database
+  mysql_db: name=zabbix state=present collation=utf8_general_ci
+
+- name: 4. Create a database user
+  mysql_user: name=zabbix priv=zabbix.*:ALL host=localhost state=present
+
+- name: 5a. Copy sample data
+  copy: src=base.sql dest=/tmp/base.sql
+
+- name: 5b. Insert sample data
+  shell: cat /tmp/base.sql | mysql -uroot zabbix
+
+- name: Copying  zabbix_server.conf 
+  template: src=zabbix_server.conf dest=/etc/zabbix/zabbix_server.conf
+  notify:
+  - restart Zabbix-server
+
+- name: Copying zabbix.conf to Apache
+  template: src=zabbix.conf dest=/etc/httpd/conf.d/zabbix.conf
+  notify:
+  - restart Apache 
