@@ -16,30 +16,36 @@
   notify:
     - restart Mysql-server
 
-- name: 4. Creating a new Zabbix database
+- name: 4. Ensure that MySQL-server is started
+  service: name=mysqld state=started
+
+- name: 5. Creating a new Zabbix database
   mysql_db: name=zabbix state=present collation=utf8_general_ci
 
-- name: 5. Creating a database user
-  mysql_user: name=zabbix priv=zabbix.*:ALL host=localhost state=present
+- name: 6. Creating a database user
+  mysql_user: name=zabbix password=zabbix priv=zabbix.*:ALL host=localhost state=present
 
-- name: 6. Copying dump of database
-  copy: src=base.sql dest=/tmp/base.sql
+- name: 7. Copying dump of database
+  copy: src=zabbix.sql dest=/tmp/zabbix.sql
 
-#- name: 7a. Inserting dump of database
-#  shell: cat /tmp/base.sql | mysql -uroot zabbix
+#- name: 8a. Inserting dump of database
+#  shell: cat /tmp/zabbix.sql | mysql -uroot zabbix
 
-- name: 7b. Inserting dump of database
-  mysql_db: name=zabbix state=import target=/tmp/base.sql
+- name: 8b. Inserting dump of database
+  mysql_db: name=zabbix state=import target=/tmp/zabbix.sql
 
-- name: 8. Copying zabbix.conf to Apache
+- name: 9. Copying zabbix.conf to Apache
   template: src=zabbix.conf dest=/etc/httpd/conf.d/zabbix.conf
   notify:
   - restart Apache
 
-- name: 9. Copying  zabbix_server.conf
+- name: 10. Copying hosts file to /etc/hosts
+  template: src=hosts dest=/etc/hosts
+
+- name: 11. Copying  zabbix_server.conf
   template: src=zabbix_server.conf dest=/etc/zabbix/zabbix_server.conf
   notify:
   - restart Zabbix-server
 
-- name: 10. Ensure that Zabbix-server is started
+- name: 12. Ensure that Zabbix-server is started
   service: name=zabbix-server state=started 

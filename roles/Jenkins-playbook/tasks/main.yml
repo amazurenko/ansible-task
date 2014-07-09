@@ -23,6 +23,9 @@
     - httpd
     - zabbix-agent
 
+- name: Copying hosts file to /etc/hosts
+  template: src=hosts dest=/etc/hosts
+
 - name: Ensure Jenkins is running automatically at boot time
   action: command /sbin/chkconfig jenkins on
   notify: 

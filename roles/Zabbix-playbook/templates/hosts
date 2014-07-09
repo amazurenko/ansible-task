@@ -1,0 +1,6 @@
+127.0.0.1   zabbix localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+10.6.28.43 ansible.srv
+10.6.26.52 jenkins.srv
+10.6.27.121 zabbix.srv
+
