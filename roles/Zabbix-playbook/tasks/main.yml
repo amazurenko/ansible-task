@@ -42,10 +42,13 @@
 - name: 10. Copying hosts file to /etc/hosts
   template: src=hosts dest=/etc/hosts
 
-- name: 11. Copying  zabbix_server.conf
+- name: 11. Copying hosts file to /etc/hosts
+  template: src=zabbix.conf.php dest=/etc/zabbix/web/zabbix.conf.php
+
+- name: 12. Copying  zabbix_server.conf
   template: src=zabbix_server.conf dest=/etc/zabbix/zabbix_server.conf
   notify:
   - restart Zabbix-server
 
-- name: 12. Ensure that Zabbix-server is started
+- name: 13. Ensure that Zabbix-server is started
   service: name=zabbix-server state=started 
